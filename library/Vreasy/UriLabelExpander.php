@@ -22,7 +22,8 @@ class UriLabelExpander
         static::$labels = $labels;
     }
 
-    public static function expand($uriOrParams, $char = '.') {
+    public static function expand($uriOrParams, $char = '.')
+    {
         if (!static::$labels) {
             throw new NoPropertyException('There are no configured labels to expand');
         }

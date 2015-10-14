@@ -1,38 +1,35 @@
 machine:
   php:
-    # Also change this in test.vreasy.com vhost file
-    version: 5.4.21
+    version: 5.6.5
   node:
-    version: v0.10.25
-  hosts:
-    test.vreasy.com: 127.0.0.1
+    version: v0.10.33
   environment:
     APPLICATION_ENV: test
+experimental:
+  notify:
+    branches:
+      only:
+        - task-confirmation
 dependencies:
   cache_directories:
     - "vendor/.cache"
     - "node_modules"
   pre:
     - pecl install -f memcached-2.0.1
-    - npm install -g bower
     - echo "short_open_tag = On" > ~/.phpenv/versions/$(phpenv global)/etc/conf.d/memory.ini
     - sed -i -e 's/apc\.enabled=1/apc\.enabled=0/' ~/.phpenv/versions/$(phpenv global)/etc/php.ini
     - sed -i -e 's/session.serialize_handler=igbinary/session.serialize_handler=php/' ~/.phpenv/versions/$(phpenv global)/etc/php.ini
-    - mkdir -p /home/ubuntu/vreasy/vendor/.cache
-    - composer config cache-dir /home/ubuntu/vreasy/vendor/.cache
+    - mkdir -p /home/ubuntu/VrRecruit/vendor/.cache
+    - composer config cache-dir /home/ubuntu/VrRecruit/vendor/.cache
     - composer config cache-files-maxsize 900MiB
     - chmod -R 0777 logs
     - mkdir -p tests/_output
     - mkdir -p tests/_log
   override:
-    - composer install --dev --no-interaction --prefer-dist
+    - composer install --no-interaction --prefer-dist
     - npm install
     - bower install --quiet
     - memcached -d
-    - cp tests/test.vreasy.com /etc/apache2/sites-available
-    - a2ensite test.vreasy.com
-    - a2enmod rewrite
-    - sudo service apache2 restart
     - phantomjs --load-images=no --disk-cache=yes --webdriver=4444:
         background: true
     - php vendor/codeception/codeception/codecept build

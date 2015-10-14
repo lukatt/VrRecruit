@@ -9,7 +9,6 @@ class ZF1IncludeHelper extends \Codeception\Module
     protected $config = ['env' => 'test'];
     protected $cleanup = false;
 
-
     public function _initialize()
     {
         $this->cleanup = @$this->config['cleanup'] ?: false;
@@ -19,6 +18,22 @@ class ZF1IncludeHelper extends \Codeception\Module
             ['vreasy', 'application', 'cli', 'cliindex.php']
         );
         require_once(\Codeception\Configuration::projectDir() . $cliIndex);
+        $module = $this->hasModule('DbzHelper')
+            ? $this->getModule('DbzHelper')
+            : $this->getModule('MysqlHelper');
+
+        $db = \Zend_Registry::get('Zend_Db');
+        $dbReflection = new \ReflectionObject($db);
+        $_connection = $dbReflection->getProperty('_connection');
+        $_connection->setAccessible(true);
+        if (($pdoConnection = $_connection->getValue($db)) && $module->dbh !== $pdoConnection) {
+            $module->dbh = null;
+            $module->dbh = $pdoConnection;
+            $moduleDriverReflection = new \ReflectionObject($module->driver);
+            $dbh = $moduleDriverReflection->getProperty('dbh');
+            $dbh->setAccessible(true);
+            $dbh->setValue($module->driver, $pdoConnection);
+        }
 //
 //        if ($db = \Zend_Registry::get('Zend_Db')) {
 //            $profiler = $db->getProfiler();
@@ -31,14 +46,33 @@ class ZF1IncludeHelper extends \Codeception\Module
 //        }
     }
 
-    function _before(TestCase $test)
+    public function _beforeSuite($settings = array())
+    {
+        $module = $this->hasModule('DbzHelper')
+            ? $this->getModule('DbzHelper')
+            : $this->getModule('MysqlHelper');
+        $db = \Zend_Registry::get('Zend_Db');
+        $dbReflection = new \ReflectionObject($db);
+        $_connection = $dbReflection->getProperty('_connection');
+        $_connection->setAccessible(true);
+        if (($pdoConnection = $_connection->getValue($db)) && $module->dbh !== $pdoConnection) {
+            $module->dbh = null;
+            $module->dbh = $pdoConnection;
+            $moduleDriverReflection = new \ReflectionObject($module->driver);
+            $dbh = $moduleDriverReflection->getProperty('dbh');
+            $dbh->setAccessible(true);
+            $dbh->setValue($module->driver, $pdoConnection);
+        }
+    }
+
+    public function _before(TestCase $test)
     {
         if ($this->cleanup) {
             \Zend_Registry::get('Zend_Db')->beginTransaction();
         }
     }
 
-    function _after(TestCase $test)
+    public function _after(TestCase $test)
     {
         try {
             if ($this->cleanup) {

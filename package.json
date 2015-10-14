@@ -1,16 +1,16 @@
 {
-  "name": "Vreasy",
-  "version": "1.4.1",
-  "description": "Vreasy",
+  "name": "VrRecruit",
+  "version": "1.5.1",
+  "description": "Vreasy Recruitment Task's confirmation assignment",
   "main": "package.json",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run --reporters=progress"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mwpicard/vreasy.git"
+    "url": "git://github.com/Vreasy/VrRecruit.git"
   },
-  "license": "Closed",
+  "license": "CC-BY-NC-ND-4.0",
   "gitHead": "b437de764b567462f8e0a702495337076cb8654f",
   "registry": "http://registry.npmjs.eu/",
   "readmeFilename": "README.md",
@@ -21,10 +21,14 @@
     "karma-growl-reporter": "~0.1.0",
     "karma-jasmine": "~0.1.0",
     "karma-ng-html2js-preprocessor": "~0.1.0",
-    "karma-phantomjs-launcher": "~0.1.0",
-    "gulp-coffeelint": "~0.3.0",
-    "gulp-jshint": "~1.6.0",
-    "jshint-stylish": "~0.2.0"
+    "karma-phantomjs-launcher": "~0.2.0",
+    "phantomjs": "~1.9.0",
+    "jshint-stylish": "~0.2.0",
+    "node-lambda": "~0.6.1",
+    "gulp-coffeelint": "0.3.3",
+    "browserify": "~8.1.0",
+    "coffeeify": "~1.0.0",
+    "gulp-jshint": "1.8.3"
   },
   "dependencies": {
     "coffee-script": "~1.7.0",

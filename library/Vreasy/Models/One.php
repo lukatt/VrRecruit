@@ -26,13 +26,6 @@ class One extends Collection implements \JsonSerializable
         return $this->getStorage();
     }
 
-    public function buildAssociation($params = [])
-    {
-        $association = Base::instanceWith($params, $this->classType);
-        $this->exchangeArray([$association]);
-        return $association;
-    }
-
     protected function getStorage()
     {
         if ($this->isPresent() && ($it = $this->getIterator()) && $it->valid()) {
@@ -44,13 +37,17 @@ class One extends Collection implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        return $this->getStorage();
+        if (method_exists($this->getStorage(), 'jsonSerialize')) {
+            return $this->getStorage()->jsonSerialize();
+        } else {
+            return $this->getStorage();
+        }
     }
 
     public function append($value)
     {
         if ($this->count() > 0) {
-            throw new UnsupportedMethodException('One can only have one '.$this->classType);
+            throw new UnsupportedMethodException('One can only have one '.$this->getClassType());
         } else {
             parent::append($value);
         }
@@ -59,7 +56,7 @@ class One extends Collection implements \JsonSerializable
     public function offsetSet($i, $v)
     {
         if ($this->count() > 0) {
-            throw new UnsupportedMethodException('One can only have one '.$this->classType);
+            throw new UnsupportedMethodException('One can only have one '.$this->getClassType());
         } else {
             parent::offsetSet($i, $v);
         }
@@ -93,5 +90,13 @@ class One extends Collection implements \JsonSerializable
     public function __unset($attribute)
     {
         unset($this->getStorage()->$attribute);
+    }
+
+    public function __toString()
+    {
+        // Some array methods need to convert the values to strings for comparison
+        return method_exists($this->getStorage(), '__toString')
+            ? $this->getStorage()->__toString()
+            : parent::__toString();
     }
 }

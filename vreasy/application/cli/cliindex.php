@@ -4,7 +4,7 @@ require_once( dirname (dirname ( __DIR__ )) . '/public/index.php' );
 $application = null;
 $application = new Zend_Application(
     APPLICATION_ENV,
-    APPLICATION_PATH . '/configs/application.ini'
+    APPLICATION_PATH . '/configs/application.php'
 );
 $application->bootstrap('Autoload');
 $application->bootstrap('Db');

@@ -1,9 +1,27 @@
-vreasy/public/media/
+/.buildpath
+/.settings/org.eclipse.php.core.prefs
+/.settings/org.eclipse.wst.common.project.facet.core.xml
+/vreasy/public/media/
 
 /.project
 /.bundle
 
+*.gitmodules
+.gitmodules
+
 vendor
+
+# Bower:
+/bower_components
+*/bower_components/*
+
+# Grunt generated files:
+/vreasy/public/angular
+
+# Code coverage reports:
+/coverage
+
+
 *.logs
 *.log
 *.BACKUP.*
@@ -13,11 +31,15 @@ vendor
 *.orig
 *.DS_*
 tests/_log/*
+tests/_output/*
 tests/*/*Tester.php
+!tests/_data/dump.sql
+
 /.settings/org.eclipse.core.resources.prefs
 node_modules/
-vreasy/public/bower_components/*
-tests/_log/*
+/urls.txt
+/t.json
+
 # php profiler that usually is in the public folder
 *webgrind*
 bin/
@@ -25,3 +47,21 @@ bin/
 # Do not ignore the gitkeeps
 !*.gitkeep
 .elasticbeanstalk/
+
+.idea/
+.vagrant/
+
+vreasy/public/docs/*.json
+vreasy/public/docs/*.php
+vreasy/public/bower_components/*
+
+docs/internal/*
+docs/public-api/_data/*
+docs/public-api/_includes
+docs/public-api/_includes/*
+/docs/public-api/_includes
+/docs/public-api/_includes/*
+
+# Netbeans stuff
+nbproject
+nbproject/*

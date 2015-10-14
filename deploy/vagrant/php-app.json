@@ -1,0 +1,18 @@
+{
+  "dependencies": {
+    "debs": ["socat", "zip", "php5-memcached", "php5-intl", "php5-mcrypt", "php5-xdebug", "virt-what"],
+    "update_debs": true
+  },
+  "opsworks_custom_cookbooks": {
+    "recipes": [
+      "recipe[ebs]",
+      "recipe[mod_php5_apache2]",
+      "recipe[mod_php5_apache2::php]",
+      "recipe[opsworks_nodejs]",
+      "recipe[deploy::php]",
+      "recipe[php::configure]",
+      "recipe[opsworks_nodejs::configure]",
+      "recipe[deploy::php]"
+    ]
+  }
+}

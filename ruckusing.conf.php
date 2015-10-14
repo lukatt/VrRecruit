@@ -9,36 +9,6 @@ set_include_path(implode(
     array(realpath(__DIR__ . '/library'), get_include_path())
 ));
 
-require_once 'Zend/Config/Ini.php';
-$config = new Zend_Config_Ini(realpath(
-    __DIR__ . '/vreasy/application/configs/db.ini'
-));
-
-$enviroments = ['production', 'test', 'development'];
-
-foreach ($enviroments as $env) {
-    $enviroments[$env] = [
-        'directory' => 'webapp',
-        'type'      => 'mysql',
-        'host'      => $config->$env->database->params->host,
-        'port'      => 3306,
-        'database'  => $config->$env->database->params->dbname,
-        'user'      => $config->$env->database->params->username,
-        'password'  => $config->$env->database->params->password,
-    ];
-}
-
-$db_config = [
-    'db' => $enviroments,
-    'migrations_dir' => RUCKUSING_WORKING_BASE . DIRECTORY_SEPARATOR . 'migrations',
-    'db_dir' => RUCKUSING_WORKING_BASE . DIRECTORY_SEPARATOR . 'db',
-    'log_dir' => RUCKUSING_WORKING_BASE . DIRECTORY_SEPARATOR . 'logs',
-    'ruckusing_base' => implode(
-        DIRECTORY_SEPARATOR,
-        ['vendor', 'ruckusing','ruckusing-migrations']
-    )
-];
-
 function getRuckusingEnv($argv)
 {
     $num_args = count($argv);
@@ -48,6 +18,7 @@ function getRuckusingEnv($argv)
         $arg = $argv[$i];
         if (stripos($arg, '=') !== false) {
             list($key, $value) = explode('=', $arg);
+            // Allow both upper and lower case parameters
             $key = strtolower($key);
             $options[$key] = $value;
             if ($key == 'env') {
@@ -60,5 +31,37 @@ function getRuckusingEnv($argv)
 if ($env = getRuckusingEnv($argv)) {
     putenv('APPLICATION_ENV='.$env);
 }
+
+defined('APPLICATION_ENV') || define(
+    'APPLICATION_ENV',
+    (getenv('APPLICATION_ENV') ? getenv('APPLICATION_ENV') : 'production')
+);
+
+
+require_once 'Zend/Config.php';
+$config = new Zend_Config( require realpath(__DIR__ . '/vreasy/application/configs/db.php'));
+
+$environments = [APPLICATION_ENV];
+
+foreach ($environments as $env) {
+    $environments[$env] = [
+        'directory' => 'webapp',
+        'type' => 'mysql',
+        'charset' => 'utf8',
+        'host' => $config->database->params->host,
+        'port' => 3306,
+        'database' => $config->database->params->dbname,
+        'user' => $config->database->params->username,
+        'password' => $config->database->params->password,
+    ];
+}
+
+$db_config = [
+    'db' => $environments,
+    'migrations_dir' => RUCKUSING_WORKING_BASE . DIRECTORY_SEPARATOR . 'migrations',
+    'db_dir' => RUCKUSING_WORKING_BASE . DIRECTORY_SEPARATOR . 'db',
+    'log_dir' => RUCKUSING_WORKING_BASE . DIRECTORY_SEPARATOR . 'logs',
+    'ruckusing_base' => implode(DIRECTORY_SEPARATOR, ['vendor', 'ruckusing','ruckusing-migrations'])
+];
 
 return $db_config;
