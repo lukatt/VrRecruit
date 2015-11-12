@@ -1,6 +1,7 @@
+
 class_name: FunctionalTester
 modules:
-    enabled: [Asserts, REST, MysqlHelper, ZF1, FunctionalHelper, DbzHelper]
+    enabled: [Asserts, REST, DbzHelper, ZF1IncludeHelper, ZF1, FunctionalHelper]
 
     config:
         MysqlHelper:
@@ -19,8 +20,11 @@ modules:
             cleanup: false
         REST:
             timeout: 90
+        ZF1IncludeHelper:
+            cleanup: true
+            env: 'test'
         ZF1:
             env: 'test'
             app_path: 'vreasy/application'
             lib_path: 'library'
-            config: 'vreasy/application/configs/application.ini'
+            config: 'vreasy/application/configs/application.php'

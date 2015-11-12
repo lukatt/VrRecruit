@@ -1,17 +1,9 @@
 class_name: UnitTester
 modules:
-    enabled: [Asserts, UnitHelper, MysqlHelper, ZF1IncludeHelper, DbzHelper]
-
+    enabled: [Asserts, UnitHelper, DbzHelper, ZF1IncludeHelper]
     config:
-        MysqlHelper:
-            dsn: 'mysql:host=127.0.0.1;dbname=vreasy_task_confirmation_test'
-            user: 'ubuntu'
-            password: ''
-            dump: tests/_data/dump.sql
-            populate: true
-            cleanup: false
-            cleanup: false
-            mysqlBin: 'mysql'
+        ZF1IncludeHelper:
+            cleanup: true
         DbzHelper:
             dsn: 'mysql:host=127.0.0.1;dbname=vreasy_task_confirmation_test'
             user: 'ubuntu'
@@ -19,4 +11,4 @@ modules:
             dump: tests/_data/dump.sql
             populate: true
             cleanup: false
-
+            mysqlBin: 'mysql'

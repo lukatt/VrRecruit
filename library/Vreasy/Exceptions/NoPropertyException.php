@@ -1,5 +1,7 @@
 <?php
 namespace Vreasy\Exceptions;
 
-class NoPropertyException extends \LogicException {
+class NoPropertyException extends \LogicException
+{
+
 }

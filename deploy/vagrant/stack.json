@@ -1,0 +1,52 @@
+{
+  "opsworks": {
+    "layers": {
+      "php-app": {
+        "instances": {
+          "php-app1": {"private-ip": "10.10.10.10"}
+        }
+      }
+    },
+    "deploy_keep_releases": 1
+  },
+  "deploy": {
+    "vreasy-task-confirmation": {
+      "application_type": "php",
+      "document_root": "vreasy/public",
+      "domains": [
+        "www.vreasy.dev",
+        "icalwww.vreasy.dev"
+      ],
+      "migrate": false,
+      "ssl_support": false,
+      "environment_variables": {
+        "APPLICATION_ENV": "development",
+        "ENV": "development",
+        "PHP_DB_DBNAME": "vreasy_task_confirmation",
+        "PHP_DB_HOST": "10.0.2.2",
+        "PHP_DB_USERNAME": "vreasy",
+        "PHP_DB_PASSWORD": "FeA336101-vreasy_task_confirmation"
+      },
+      "environment": {
+        "APPLICATION_ENV": "development",
+        "ENV": "development",
+        "PHP_DB_DBNAME": "vreasy_task_confirmation",
+        "PHP_DB_HOST": "10.0.2.2",
+        "PHP_DB_USERNAME": "vreasy",
+        "PHP_DB_PASSWORD": "FeA336101-vreasy_task_confirmation"
+      },
+      "auto_bundle_on_deploy": true,
+      "scm": {
+        "scm_type": "git",
+        "repository": "."
+      },
+      "memcached": {},
+      "database": {
+        "host": "10.0.2.2",
+        "database": "vreasy_task_confirmation",
+        "reconnect": true
+      },
+      "timeout": 6000
+    }
+  }
+}

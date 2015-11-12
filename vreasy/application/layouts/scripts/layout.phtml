@@ -9,38 +9,26 @@
     <link rel="icon" href="/favicon.png" type="image/png">
     <link rel="shortcut icon" href="/favicon.ico">
     <?= $this->headLink()?>
-    <link href="/css/vreasy/fuelux.css" rel="stylesheet" />
-    <link type="text/css" rel='stylesheet' href='/css/vreasy/vreasy.css'>
+    <link href="https://www.vreasy.com/angular/vreasy.css" rel="stylesheet">
     <script type="text/javascript" src="/bower_components/angular/angular.min.js"></script>
-    <script type="text/javascript" src="/bower_components/underscore/underscore-min.js"></script>
+    <script type="text/javascript" src="/bower_components/lodash/dist/lodash.min.js"></script>
     <script type="text/javascript" src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
     <script type="text/javascript" src="/bower_components/angular-resource/angular-resource.min.js"></script>
     <script type="text/javascript" src="/taskConfirmationApp/app.js"></script>
   </head>
   <body>
-    <div class="navbar navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar"
-            data-toggle="collapse"
-            data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-          </a>
-          <a class="brand"
-            href="/">
-                <img src="/vreasy-logotype-dark.png" title="<?= APP_TITLE ?>">
-          </a>
-          <div class="nav-collapse collapse">
-            <ul class="nav pull-right">
-                <li>
-                    <a href="#">Property Manager</a>
-                </li>
-            </ul>
+    <div class="vr-nav-bar">
+      <nav role="navigation" >
+        <div>
+          <div class="navbar-header">
+            <a href="/" title="{{ appName }}" class="navbar-brand">
+              <img src="https://www.vreasy.com/img/vreasy-logo-svg.svg" height="60">
+            </a>
           </div>
         </div>
-      </div>
+      </nav>
     </div>
-    <div class="container"
+    <div class="container main-view-wrapper"
         id="vreasy-main-container"
         style="position: relative;">
             <?= $this->layout()->content; ?>
@@ -50,7 +38,7 @@
       <footer>
         <p class="ar copyright pull-right">
             <small>
-              &copy; <?= APP_TITLE ?> &trade; <?= date('Y') ?> version <?= APP_VERSION ?> <?= APPLICATION_ENV == 'production' ? '' : APPLICATION_ENV ?>
+              &copy; <?= APP_TITLE ?> <?= date('Y') ?> version <?= APP_VERSION ?> <?= APPLICATION_ENV == 'production' ? '' : APPLICATION_ENV ?>
             </small>
         </p>
       </footer>

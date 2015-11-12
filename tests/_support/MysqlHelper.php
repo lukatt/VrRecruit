@@ -13,7 +13,7 @@ class MysqlHelper extends \Codeception\Module\Db
 
     public function _initialize()
     {
-        if ($this->config['dump'] && ($this->config['cleanup'] or ($this->config['populate']))) {
+        if ($this->config['dump'] && ($this->config['cleanup'] || ($this->config['populate']))) {
 
             if (!file_exists(Configuration::projectDir() . $this->config['dump'])) {
                 throw new ModuleConfigException(

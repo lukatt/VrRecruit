@@ -1,4 +1,5 @@
 <?php
+
 namespace Vreasy;
 
 interface HasAttributes

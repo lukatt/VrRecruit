@@ -6,22 +6,22 @@ class DbzHelper extends \Codeception\Module\MysqlHelper
 {
     public function getDbAdapter()
     {
-        if ($this->hasModule('ZF1')) {
-            return $this->getModule('ZF1')->db;
-        } else {
-            return \Zend_Registry::get('Zend_Db');
-        }
+        return \Zend_Registry::get('Zend_Db');
     }
 
     public function _before(\Codeception\TestCase $test)
     {
-        $this->getDbAdapter()->beginTransaction();
+        if ($this->config['cleanup']) {
+            $this->getDbAdapter()->beginTransaction();
+        }
     }
 
     public function _after(\Codeception\TestCase $test)
     {
         try {
-            $this->getDbAdapter()->rollback();
+            if ($this->config['cleanup']) {
+                $this->getDbAdapter()->rollback();
+            }
         } catch (\Exception $e) {
             if ($e->getMessage() == \Magento\Framework\DB\Adapter\AdapterInterface::ERROR_ASYMMETRIC_ROLLBACK_MESSAGE) {
                 // Catch exception that means that the DB query failed!
@@ -38,7 +38,7 @@ class DbzHelper extends \Codeception\Module\MysqlHelper
 
     public function haveInDatabase($table, array $data)
     {
-        $query = $this->getModule('MysqlHelper')->driver->insert($table, $data);
+        $query = $this->driver->insert($table, $data);
         $this->debugSection('Query', $query);
 
         $sth = $this->getDbAdapter()->insert($table, $data);

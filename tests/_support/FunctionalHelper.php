@@ -21,8 +21,6 @@ class FunctionalHelper extends \Codeception\Lib\InnerBrowser
         $crawler = new \ReflectionProperty(get_class($this->client), 'crawler');
         $crawler->setAccessible(true);
         $this->crawler = $crawler->getValue($this->client);
-
-        $this->getModule('ZF1')->db->beginTransaction();
     }
 
     public function enableDebugging()
@@ -34,14 +32,13 @@ class FunctionalHelper extends \Codeception\Lib\InnerBrowser
     {
         $GLOBALS['isDebugging'] = null;
         unset($GLOBALS['isDebugging']);
-        $this->getModule('ZF1')->db->rollback();
     }
 
     public function seeEquals($value, $test, $message = '')
     {
         \PHPUnit_Framework_Assert::assertEquals($value, $test, $message);
     }
-    
+
     public function haveTask($params = [])
     {
     	$I = $this->getModule('DbzHelper');

@@ -1,24 +1,26 @@
 RewriteEngine On
 
-#	Display default icon if none found
+# Send the naked domain request to www sub-domain
 RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond	%{REQUEST_URI} /img/vicons/32x32px/.+_green.png
-RewriteRule ^.*$ img/vicons/32x32px/substitute_green.png [L]
-RewriteCond	%{REQUEST_URI} /img/vicons/32x32px/.+_red.png
-RewriteRule ^.*$ img/vicons/32x32px/substitute_red.png [L]
-
+RewriteCond %{REQUEST_URI} !^/s/ [NC]
 RewriteCond %{HTTP_HOST} ^vreasy\. [NC]
-RewriteRule (.*) http://www.%{HTTP_HOST}/$1 [L,R=301]
+RewriteRule (.*) %{ENV:REQUEST_SCHEME}://www.%{HTTP_HOST}/$1 [L,R=301,NE]
 
-RewriteCond %{HTTP_HOST} !^www\.vreasy\.com$ [NC]
-RewriteCond %{REQUEST_URI} /robots.txt [NC]
-RewriteRule (.*) /robots.off.txt [L]
-
+# Send requests to the front facing index.php file
 RewriteCond %{REQUEST_FILENAME} -s [OR]
 RewriteCond %{REQUEST_FILENAME} -l [OR]
 RewriteCond %{REQUEST_FILENAME} -d
 RewriteRule ^.*$ - [NC,L]
+
 RewriteRule ^.*$ index.php [NC,L]
 
-# Enable PHP short open tags:
-# php_flag short_open_tag on
+Header set Cache-Control "public, maxage=72000, must-revalidate, s-maxage=900, proxy-revalidate" "expr=%{REQUEST_URI} =~ /^.*\.js$/"
+Header set Cache-Control "public, maxage=72000, must-revalidate, s-maxage=900, proxy-revalidate" "expr=%{REQUEST_URI} =~ /^.*\.css$/"
+Header set Cache-Control "public, maxage=72000, must-revalidate, s-maxage=900, proxy-revalidate" "expr=%{REQUEST_URI} =~ /^.*\.png$/"
+Header set Cache-Control "public, maxage=72000, must-revalidate, s-maxage=900, proxy-revalidate" "expr=%{REQUEST_URI} =~ /^.*\.jpg$/"
+Header set Cache-Control "public, maxage=72000, must-revalidate, s-maxage=900, proxy-revalidate" "expr=%{REQUEST_URI} =~ /^.*\.jpeg$/"
+Header set Cache-Control "public, maxage=72000, must-revalidate, s-maxage=900, proxy-revalidate" "expr=%{REQUEST_URI} =~ /^.*\.gif$/"
+Header  unset ETag "expr=%{REQUEST_URI} =~ /^.*\.(js|css|png|jpg|jpeg|gif)$/"
+
+# To avoid vagrant issues see https://docs.vagrantup.com/v2/synced-folders/virtualbox.html
+EnableSendfile Off

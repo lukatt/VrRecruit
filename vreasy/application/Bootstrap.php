@@ -3,6 +3,8 @@
 use Valitron\Validator;
 use Vreasy\UriLabelExpander;
 use Vreasy\FeatureToggle\FeatureConfig;
+use Vreasy\Zend\VreasyView;
+use Vreasy\NullObject;
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 {
@@ -21,28 +23,35 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         }
     }
 
-    protected function _initLog()
-    {
-        $writer = new Zend_Log_Writer_Stream('php://stderr');
-        $logger = new Zend_Log($writer);
-        Zend_Registry::set('Zend_Log', $logger);
-    }
-
     public function _initActionHelpers()
     {
         Zend_Controller_Action_HelperBroker::addPath(
             APPLICATION_PATH .'/modules/vreasy/controllers/helpers',
             'Vreasy_Controller_Action_Helper'
         );
+        Zend_Controller_Action_HelperBroker::addPath(
+            APPLICATION_PATH .'/modules/api/controllers/helpers',
+            'Api_Controller_Action_Helper'
+        );
     }
 
     public function _initRouter()
     {
-        $restRoute = new Vreasy_Rest_Route(
+        $viewsRoute = new Vreasy_Rest_Route(
             Zend_Controller_Front::getInstance(),
             ['module' => 'vreasy'],
             ['vreasy' => ['task',]
         ]);
+        Zend_Controller_Front::getInstance()->getRouter()->addRoute(
+            'vreasy',
+            $viewsRoute
+        );
+
+        $restRoute = new Zend_Rest_Route(
+            Zend_Controller_Front::getInstance(),
+            [],
+            ['api']
+        );
         Zend_Controller_Front::getInstance()->getRouter()->addRoute(
             'vreasy',
             $restRoute
@@ -55,25 +64,35 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
     public function _initDb()
     {
-        $dbconf = new Zend_Config_Ini(APPLICATION_PATH.'/configs/db.ini', APPLICATION_ENV);
-        Zend_Registry::set('Zend_Db', Zend_Db::factory($dbconf->database));
-        Zend_Registry::get('Zend_Db')->setFetchMode(Zend_Db::FETCH_OBJ);
-        Zend_Db_Table::setDefaultAdapter(Zend_Registry::get('Zend_Db'));
-        return Zend_Registry::get('Zend_Db');
+        if (\Zend_Registry::isRegistered('Zend_Db')) {
+            return \Zend_Registry::get('Zend_Db');
+        } else {
+            $dbconf = new \Zend_Config( require APPLICATION_PATH . '/configs/db.php');
+            \Zend_Registry::set('Zend_Db', Zend_Db::factory($dbconf->database));
+            \Zend_Registry::get('Zend_Db')->setFetchMode(Zend_Db::FETCH_OBJ);
+            \Zend_Db_Table::setDefaultAdapter(Zend_Registry::get('Zend_Db'));
+            return \Zend_Registry::get('Zend_Db');
+        }
+    }
+
+    protected function _initLog()
+    {
+        $writer = new Zend_Log_Writer_Stream('php://stderr');
+        $logger = new Zend_Log($writer);
+        Zend_Registry::set('Zend_Log', $logger);
+        // For all your syslog needs
+        openlog("vreasy", LOG_PID|LOG_PERROR|LOG_ODELAY, LOG_LOCAL0);
     }
 
     protected function _initConfig()
     {
-        $config = new Zend_Config_Ini(
-            APPLICATION_PATH . '/configs/application.ini',
-            APPLICATION_ENV
-        );
+        $config = new Zend_Config( require APPLICATION_PATH . '/configs/application.php');
         Zend_Registry::set('config', $config);
     }
 
     protected function _initView()
     {
-        $view = new Zend_View();
+        $view = new VreasyView();
         $view->addHelperPath(
             APPLICATION_PATH . '/modules/vreasy/views/helpers',
             'Vreasy_Helper');
@@ -87,6 +106,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
 
         $viewRenderer = Zend_Controller_Action_HelperBroker::getStaticHelper('ViewRenderer');
         $viewRenderer->setView($view);
+        \Zend_Registry::set('VreasyView', $view);
         return $view;
     }
 
@@ -99,10 +119,12 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
                     $params,
                     function($v, $c) use($field, $value) {
                         if (!$v && $v !== false) {
+                            // Init $v
                             $v = call_user_func($c, $field, $value);
                         } else {
                             $v = $v && call_user_func($c, $field, $value);
                         }
+                        unset($c);
                         return $v;
                     }
                 );
@@ -130,12 +152,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         //     )
         // ]);
 
-        if (APPLICATION_ENV == 'test') {
+        if (false !== stripos(APPLICATION_ENV, 'circle')) {
             // Avoid calling external services when running the testing suite
-            $mock = new \Guzzle\Plugin\Mock\MockPlugin();
+            $mock = new Vreasy\Tests\MockAllRequestsPlugin();
             $mock->addResponse(new \Guzzle\Http\Message\Response(200));
             $client->addSubscriber($mock);
         }
         Zend_Registry::set('GuzzleClient', $client);
     }
+
 }

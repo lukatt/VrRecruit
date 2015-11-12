@@ -2,7 +2,7 @@
 
 namespace Vreasy;
 
-class NullObject
+class NullObject implements \ArrayAccess
 {
     public function __set($attribute, $value)
     {
@@ -25,6 +25,31 @@ class NullObject
     }
 
     public function __unset($attribute)
+    {
+        return;
+    }
+
+    public function __toString()
+    {
+        return '';
+    }
+
+    public function offsetExists($offset)
+    {
+        return false;
+    }
+
+    public function offsetGet($offset)
+    {
+        return '';
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        return;
+    }
+
+    public function offsetUnset($offset)
     {
         return;
     }
