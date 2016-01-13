@@ -41,7 +41,7 @@ execute "" do
 
   user "root"
   cwd "#{release_path}"
-  command "npm install --force -g npm@3.3.6"
+  command "npm install --force -g npm@3.5.3"
 end
 
 

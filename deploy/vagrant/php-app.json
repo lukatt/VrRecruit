@@ -5,6 +5,7 @@
   },
   "opsworks_custom_cookbooks": {
     "recipes": [
+      "recipe[dependencies::update]",
       "recipe[ebs]",
       "recipe[mod_php5_apache2]",
       "recipe[mod_php5_apache2::php]",

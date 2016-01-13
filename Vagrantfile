@@ -6,7 +6,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider "virtualbox" do |v|
     v.customize ["modifyvm", :id, "--cpuexecutioncap", "90"]
     v.cpus = 2
-    v.memory = 512
+    v.memory = 2048
   end
 
   # Create the php-app layer
