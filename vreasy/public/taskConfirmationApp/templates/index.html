@@ -6,14 +6,14 @@
 </ng-pluralize>
 </h1>
 
-<table>
+<table class="table">
   <tr>
     <th>Id</th>
     <th>Deadline</th>
     <th>Assignee</th>
     <th>Phone</th>
-    <th></th>
-    <th></th>
+    <th>Status</th>
+    <th>Show History</th>
     <th></th>
   </tr>
 
@@ -22,10 +22,32 @@
     <td>{{task.deadline}}</td>
     <td>{{task.assigned_name}}</td>
     <td>{{task.assigned_phone}}</td>
+    <td>{{task.status}}</td>
     <td>
-      <a href="" class="btn" disabled>
-        Show
-      </a>
+      <div class="p_container">
+          <div class="p_table" ng-class="{hidden:!show,chaldean:show}">
+            <table class="table-bordered">
+              <tr>
+                <td> Created at:</td>
+                <td> {{task.created_at}}</td>
+              </tr>
+              <tr>
+                <td> Responded at:</td>
+                <td> {{task.responded_at}}</td>
+              </tr>
+              <tr>
+                <td> Finished at:</td>
+                <td> {{task.finished_at}}</td>
+              </tr>
+              <tr>
+                <td> Deadline:</td>
+                <td> {{task.deadline}}</td>
+              </tr>
+            </table>                                  
+          </div>
+
+          <span class="trigger" ng-click="show=!show">Show</span>
+      </div>
     </td>
   </tr>
 </table>

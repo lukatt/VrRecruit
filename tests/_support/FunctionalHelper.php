@@ -47,6 +47,7 @@ class FunctionalHelper extends \Codeception\Lib\InnerBrowser
     					'deadline' => gmdate(DATE_FORMAT),
     					'assigned_phone' => '+34666666666',
     					'assigned_name' => 'John Doe',
+                        'status' => 'pending',
     			],
     			$params
     	);

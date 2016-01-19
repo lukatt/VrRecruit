@@ -19,6 +19,9 @@ class Task extends Base
     protected $deadline;
     protected $assigned_name;
     protected $assigned_phone;
+    protected $status;
+    protected $responded_at;
+    protected $finished_at;
 
     public function __construct()
     {
@@ -27,11 +30,12 @@ class Task extends Base
         // Validation is done run by Valitron library
         $this->validates(
             'required',
-            ['deadline', 'assigned_name', 'assigned_phone']
+            ['deadline', 'assigned_name', 'assigned_phone','status']
         );
         $this->validates(
             'integer',
             ['id']
         );
     }
+
 }

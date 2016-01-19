@@ -78,6 +78,9 @@ class Api_TasksController extends Vreasy_Rest_Controller
             'deadline',
             'assigned_name',
             'assigned_phone',
+            'status',
+            'responded_at',
+            'finished_at',
         ];
 
         return Arrays::intersect_key_recursive(

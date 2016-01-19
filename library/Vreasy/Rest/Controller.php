@@ -509,7 +509,7 @@ class Vreasy_Rest_Controller extends \Zend_Rest_Controller
     protected function getExpandedLinks()
     {
         $expand = $this->getParam('expand');
-        if (!$expand && $body = $this->getParam('body')) {
+        if (!$expand && ($body = $this->getParam('body')) && is_array($body)) {
             if (array_key_exists('expand', $body)) {
                 $expand = $body['expand'];
             }
