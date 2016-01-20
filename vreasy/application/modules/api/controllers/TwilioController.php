@@ -50,8 +50,8 @@ class Api_TwilioController extends Vreasy_Rest_Controller
                 //there are no pending tasks for that provider -> send him that message
 
                 //$client->account->messages->sendMessage( $from, "You don't have any pending tasks");
-                
-                $this->getResponse()->setHttpResponseCode(201);//using this code for testing should be 200, everything is ok on twilio side
+                $this->view->response= "You don't have any pending tasks";//need to have something to test without sending the actual twilio message
+                $this->getResponse()->setHttpResponseCode(200);
                 return $this->getResponse()->sendResponse();
             }
         } elseif(in_array($body, $doneWords)){
@@ -68,8 +68,8 @@ class Api_TwilioController extends Vreasy_Rest_Controller
                 //there are no accepted tasks for that provider -> send him that message
 
                 //$client->account->messages->sendMessage( $from, "You don't have any accepted tasks");
-                
-                $this->getResponse()->setHttpResponseCode(202); //using this code for testing should be 200, everything is ok on twilio side
+                $this->view->response= "You don't have any accepted tasks"; //need to have something to test without sending the actual twilio message
+                $this->getResponse()->setHttpResponseCode(200);
                 return $this->getResponse()->sendResponse();
             }
 
@@ -87,8 +87,9 @@ class Api_TwilioController extends Vreasy_Rest_Controller
         else{
             //provider did not do a good job at typing the message
 
-            //$client->account->messages->sendMessage( $from, "We can't understand your message, please check for errors and try again"); 
-            $this->getResponse()->setHttpResponseCode(203); //using this code for testing should be 200, everything is ok on twilio side
+            //$client->account->messages->sendMessage( $from, "We can't understand your message, please check for errors and try again");
+            $this->view->response= "We can't understand your message, please check for errors and try again"; //need to have something to test without sending the actual twilio message
+            $this->getResponse()->setHttpResponseCode(200);
             return $this->getResponse()->sendResponse();       
         }
         $this->task->save();

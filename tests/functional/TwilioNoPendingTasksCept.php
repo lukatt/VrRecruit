@@ -7,4 +7,5 @@ $I->dontSeeInDatabase('tasks',array('assigned_phone' => '+55 555-555-554', 'stat
 
 $I->sendPOST("/api/twilio?from=%2B55%20555-555-554&body=yes");
 
-$I->seeResponseCodeIs(201);
+$I->seeResponseCodeIs(200);
+$I->see("You don't have any pending tasks");
